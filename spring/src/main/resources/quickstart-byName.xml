@@ -3,6 +3,18 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="person" class="cn.whh.spring.dl.bean.Person"></bean>
+    <bean id="person" class="cn.whh.spring.dl.bean.Person">
+        <property name="age" value="18"/>
+        <property name="name" value="whh"/>
+        <!--<property name="cat" ref="cat"/>-->
+    </bean>
+
+    <bean id="cat" class="cn.whh.spring.dl.bean.set.Cat">
+        <property name="name" value="mimi"/>
+        <property name="age" value="1"/>
+        <property name="master" ref="person"/>
+    </bean>
+    <bean  class="cn.whh.spring.dl.bean.Student"></bean>
+
 
 </beans>
