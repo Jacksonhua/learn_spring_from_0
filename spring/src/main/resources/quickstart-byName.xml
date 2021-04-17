@@ -6,7 +6,6 @@
     <bean id="person" class="cn.whh.spring.dl.bean.Person">
         <property name="age" value="18"/>
         <property name="name" value="whh"/>
-        <!--<property name="cat" ref="cat"/>-->
     </bean>
 
     <bean id="cat" class="cn.whh.spring.dl.bean.set.Cat">
@@ -14,7 +13,11 @@
         <property name="age" value="1"/>
         <property name="master" ref="person"/>
     </bean>
-    <bean  class="cn.whh.spring.dl.bean.Student"></bean>
+    <bean  class="cn.whh.spring.dl.bean.Student"/>
+
+    <bean id="mysqlDao" class="cn.whh.spring.dao.impl.PersonMysqlDaoImpl"/>
+    <bean id="oracleDao" class="cn.whh.spring.dao.impl.PersonOracleDaoImpl"/>
+    <bean id="postgreDao" class="cn.whh.spring.dao.impl.PersonPostgreDaoImpl"/>
 
 
 </beans>
