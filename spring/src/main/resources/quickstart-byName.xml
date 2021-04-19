@@ -15,9 +15,13 @@
     </bean>
     <bean  class="cn.whh.spring.dl.bean.Student"/>
 
+    <!--ByType 依赖查找 -->
     <bean id="mysqlDao" class="cn.whh.spring.dao.impl.PersonMysqlDaoImpl"/>
     <bean id="oracleDao" class="cn.whh.spring.dao.impl.PersonOracleDaoImpl"/>
     <bean id="postgreDao" class="cn.whh.spring.dao.impl.PersonPostgreDaoImpl"/>
+    <!--通过注解来 依赖查找 -->
+    <bean id="redColor" class="cn.whh.spring.dl.bean.annotation.Red"/>
+    <bean id="blackColor" class="cn.whh.spring.dl.bean.annotation.Black"/>
 
 
 </beans>
