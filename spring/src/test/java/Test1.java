@@ -1,11 +1,13 @@
 import cn.whh.spring.dl.bean.Person;
 import cn.whh.spring.dl.bean.Student;
 import cn.whh.spring.dl.bean.annotation.Color;
+import cn.whh.spring.dl.bean.annotation.Dog;
 import cn.whh.spring.dl.bean.set.Cat;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -19,8 +21,8 @@ import java.util.stream.Stream;
  */
 @Slf4j
 public class Test1 {
-    private BeanFactory beanFactory = new ClassPathXmlApplicationContext("quickstart-byName.xml");
-    private ApplicationContext applicationContext = new ClassPathXmlApplicationContext("quickstart-byName.xml");
+    private final BeanFactory beanFactory = new ClassPathXmlApplicationContext("quickstart-byName.xml");
+    private final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("quickstart-byName.xml");
 
     /**
      * 使用别名getBean
@@ -82,6 +84,14 @@ public class Test1 {
     public void findContainBean(){
         boolean student = applicationContext.containsBean("student");
         System.out.println("student = " + student);
+    }
+    @Test
+    public void findBeanDelay(){
+        ObjectProvider<Dog> beanProvider = applicationContext.getBeanProvider(Dog.class);
+        Dog dog = beanProvider.getIfAvailable(Dog::new);
+        System.out.println("dog = " + dog);
+        beanProvider.ifAvailable(System.out::println);
+
     }
 
 }
