@@ -1,4 +1,4 @@
-package com.whh.chat2;
+package com.whh.beans;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 public class UserService {
-
-
 
     public void queryInfo(){
         System.out.println("查询信息" + this);

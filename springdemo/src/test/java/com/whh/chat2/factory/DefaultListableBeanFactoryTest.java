@@ -1,7 +1,7 @@
 package com.whh.chat2.factory;
 
 import com.whh.chat2.BeanDefinition;
-import com.whh.chat2.UserService;
+import com.whh.beans.UserService;
 import org.junit.Test;
 
 public class DefaultListableBeanFactoryTest {

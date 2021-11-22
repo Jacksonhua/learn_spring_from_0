@@ -1,5 +1,6 @@
 package com.whh.chat1;
 
+import com.whh.beans.UserService;
 import org.junit.Test;
 
 public class BeanFactoryTest {
