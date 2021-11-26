@@ -1,8 +1,12 @@
 package com.whh.chat3.factory.support;
 
+import com.whh.beans.UserDao;
 import com.whh.beans.UserService;
 import com.whh.beans.UserServiceV1;
+import com.whh.chat3.factory.PropertyValue;
+import com.whh.chat3.factory.PropertyValues;
 import com.whh.chat3.factory.config.BeanDefinition;
+import com.whh.chat3.factory.config.BeanReference;
 import org.junit.Test;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.NoOp;
@@ -10,13 +14,35 @@ import org.springframework.cglib.proxy.NoOp;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
 
 
 public class DefaultListableBeanFactoryTest {
+    DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+
+    @Test
+    public void Test_propertySetter(){
+        // 1. UserDao 注册
+        factory.registerBeanDefinition("userDao", new BeanDefinition(UserDao.class));
+        // 2.1 属性填充,普通属性
+        PropertyValue propertyValue = new PropertyValue("name","wanghaohua");
+        //2.2 依赖属性填充
+        PropertyValue propertyValue1 = new PropertyValue("userDao",new BeanReference("userDao"));
+        PropertyValues propertyValues = new PropertyValues();
+        propertyValues.addPropertyValue(propertyValue);
+        propertyValues.addPropertyValue(propertyValue1);
+        BeanDefinition beanDefinition = new BeanDefinition(UserServiceV1.class,propertyValues);
+        factory.registerBeanDefinition("userService",beanDefinition);
+        UserServiceV1 userService = (UserServiceV1) factory.getBean("userService");
+        userService.queryInfo();
+
+
+    }
     @Test
     public void test(){
         DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
         BeanDefinition beanDefinition = new BeanDefinition(UserServiceV1.class);
+        factory.setInstantiationStrategy(new CglibSubclassingInstantiationStrategy());
         factory.registerBeanDefinition("user",beanDefinition);
         UserServiceV1 bean = (UserServiceV1) factory.getBean("user", "wang");
         bean.queryInfo();
@@ -26,6 +52,7 @@ public class DefaultListableBeanFactoryTest {
         Class<UserService> baseClass = UserService.class;
         UserService o = baseClass.newInstance();
         o.queryInfo();
+
 
     }
     @Test
@@ -55,17 +82,6 @@ public class DefaultListableBeanFactoryTest {
         });
         UserServiceV1 o = (UserServiceV1) enhancer.create(new Class[]{String.class}, new String[]{"whh"});
         o.queryInfo();
-
-//        Enhancer enhancer1 = new Enhancer();
-//        enhancer1.setSuperclass(UserService.class);
-//        enhancer.setCallback(new NoOp() {
-//            @Override
-//            public int hashCode() {
-//                return super.hashCode();
-//            }
-//        });
-//        UserService o1 = (UserService) enhancer1.create();
-//        o1.queryInfo();
 
     }
 

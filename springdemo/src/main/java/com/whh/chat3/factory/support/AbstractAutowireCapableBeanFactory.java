@@ -1,10 +1,14 @@
 package com.whh.chat3.factory.support;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.whh.chat3.factory.PropertyValue;
 import com.whh.chat3.factory.config.BeanDefinition;
+import com.whh.chat3.factory.config.BeanReference;
 import com.whh.exception.BeansException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Constructor;
+import java.util.List;
 
 /**
  * @description:
@@ -13,7 +17,7 @@ import java.lang.reflect.Constructor;
 @Slf4j
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
 
-    private InstantiationStrategy strategy;
+    private InstantiationStrategy instantiationStrategy;
 
     @Override
     protected Object createBean(String name, BeanDefinition beanDefinition) throws BeansException {
@@ -21,6 +25,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         try {
             log.info("创建实例");
             bean = beanDefinition.getTargetClass().newInstance();
+            applyPropertyValues(name,bean,beanDefinition);
         } catch (InstantiationException | IllegalAccessException e) {
             log.error("error :{}",e.getMessage(),e.getCause());
             throw new BeansException(e.getMessage());
@@ -34,6 +39,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         log.info("动态创建实例");
         Object bean;
         bean = createBeanInstance(beanDefinition,name,args);
+        applyPropertyValues(name,bean,beanDefinition);
         return bean;
     }
 
@@ -49,12 +55,41 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 break;
             }
         }
-        getInstantiationStrategy();
-        return strategy.instantiate(beanDefinition, name, constructorToUse, args);
+        //先提供一个默认的
+
+        return getInstantiationStrategy().instantiate(beanDefinition, name, constructorToUse, args);
     }
 
-    private void getInstantiationStrategy() {
-        //先提供一个默认的
-        strategy = new CglibSubclassingInstantiationStrategy();
+    /**
+     * 填充属性
+     * @param beanName
+     * @param bean
+     * @param beanDefinition
+     */
+    protected void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
+        try {
+            List<PropertyValue> propertyValues = beanDefinition.getPropertyValues().getPropertyValueList();
+            for (PropertyValue propertyValue : propertyValues) {
+                String name = propertyValue.getName();
+                Object value = propertyValue.getValue();
+                if (value instanceof BeanReference) {
+                    //有依赖关系
+                    BeanReference beanReference = (BeanReference) value;
+                    value = getBean(beanReference.getBeanName());
+                }
+                BeanUtil.setFieldValue(bean, name, value);
+            }
+        }catch (Exception e){
+            throw new BeansException("Error setting property values：" + beanName,e);
+        }
+
+
+    }
+    public InstantiationStrategy getInstantiationStrategy() {
+        return instantiationStrategy;
+    }
+
+    public void setInstantiationStrategy(InstantiationStrategy instantiationStrategy) {
+        this.instantiationStrategy = instantiationStrategy;
     }
 }
