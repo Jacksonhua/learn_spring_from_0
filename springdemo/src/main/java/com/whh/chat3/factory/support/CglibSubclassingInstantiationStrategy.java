@@ -19,6 +19,7 @@ public class CglibSubclassingInstantiationStrategy implements InstantiationStrat
     public Object instantiate(BeanDefinition beanDefinition, String beanName, Constructor ctor, Object[] args) throws BeansException {
         Enhancer enhancer =new Enhancer();
         enhancer.setSuperclass(beanDefinition.getTargetClass());
+        //阅读 Spring 源码还会看到 CallbackFilter 等实现，不过我们目前的方式并不会影响创建。
         enhancer.setCallback(new NoOp() {
             @Override
             public int hashCode() {

@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 
     public void queryInfo(){
-        System.out.println("查询信息" + this);
+        System.out.println("查询信息,无参构造" + this);
     }
 
 

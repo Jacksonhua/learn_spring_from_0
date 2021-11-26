@@ -13,7 +13,7 @@ import java.lang.reflect.Constructor;
 @Slf4j
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
 
-//    private InstantiationStrategy strategy;
+    private InstantiationStrategy strategy;
 
     @Override
     protected Object createBean(String name, BeanDefinition beanDefinition) throws BeansException {
@@ -49,11 +49,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 break;
             }
         }
-        return getInstantiationStrategy().instantiate(beanDefinition, name, constructorToUse, args);
+        getInstantiationStrategy();
+        return strategy.instantiate(beanDefinition, name, constructorToUse, args);
     }
 
-    private InstantiationStrategy getInstantiationStrategy() {
+    private void getInstantiationStrategy() {
         //先提供一个默认的
-        return new CglibSubclassingInstantiationStrategy();
+        strategy = new CglibSubclassingInstantiationStrategy();
     }
 }

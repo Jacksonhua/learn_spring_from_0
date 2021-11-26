@@ -20,7 +20,7 @@ public class UserServiceV1 {
     }
 
     public void queryInfo(){
-        System.out.println("查询信息" + this);
+        System.out.println("查询信息, " + this.name+" "+this);
     }
 
 

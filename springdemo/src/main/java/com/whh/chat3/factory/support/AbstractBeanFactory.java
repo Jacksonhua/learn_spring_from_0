@@ -22,7 +22,14 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         }
         return createBean(beanName,getBeanDefinition(beanName));
     }
-
+    @Override
+    public Object getBean(String name, Object... args) throws BeansException {
+        Object singleBean = getSingleBean(name);
+        if(singleBean != null){
+            return singleBean;
+        }
+        return createBean(name,getBeanDefinition(name),args);
+    }
     /**
      * 根据 beanDefinition 创建bean
      * @param name
