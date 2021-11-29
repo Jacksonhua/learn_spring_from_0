@@ -4,7 +4,7 @@ import com.whh.beans.UserDao;
 import com.whh.beans.UserService;
 import com.whh.beans.UserServiceV1;
 import com.whh.chat3.factory.PropertyValue;
-import com.whh.chat3.factory.PropertyValues;
+import com.whh.chat4.beans.PropertyValues;
 import com.whh.chat3.factory.config.BeanDefinition;
 import com.whh.chat3.factory.config.BeanReference;
 import org.junit.Test;
@@ -29,6 +29,7 @@ public class DefaultListableBeanFactoryTest {
         PropertyValues propertyValues = new PropertyValues();
         propertyValues.addPropertyValue(propertyValue);
         propertyValues.addPropertyValue(propertyValue1);
+
         BeanDefinition beanDefinition = new BeanDefinition(UserServiceV1.class,propertyValues);
         factory.registerBeanDefinition("userService",beanDefinition);
         UserServiceV1 userService = (UserServiceV1) factory.getBean("userService");

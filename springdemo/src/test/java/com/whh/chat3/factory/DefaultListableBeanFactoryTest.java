@@ -18,8 +18,8 @@ public class DefaultListableBeanFactoryTest {
         BeanDefinition beanDefinition = new BeanDefinition(UserServiceV1.class);
         beanFactory.registerBeanDefinition("userService", beanDefinition);
         //3. 没有午餐构造函数，所以要报错
-        assertThatThrownBy(() -> beanFactory.getBean("userService")).isInstanceOf(BeansException.class)
-                .hasMessage("com.whh.beans.UserServiceV1");
+//        assertThatThrownBy(() -> beanFactory.getBean("userService")).isInstanceOf(BeansException.class)
+//                .hasMessage("com.whh.beans.UserServiceV1");
     }
 
 

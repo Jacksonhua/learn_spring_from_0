@@ -1,9 +1,11 @@
-package com.whh.chat3.factory;
+package com.whh.chat4.beans;
 
+import com.whh.chat3.factory.PropertyValue;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * @description:
@@ -21,7 +23,6 @@ public class PropertyValues {
     }
 
     public PropertyValue getProertyValue(String name){
-
         return propertyValueList.stream().filter(value -> value.getName().equals(name)).findFirst().orElse(null);
     }
 }
