@@ -1,6 +1,7 @@
 package com.whh.chat3.factory.config;
 
-import com.whh.chat4.beans.PropertyValues;
+
+import com.whh.chat3.factory.PropertyValues;
 import lombok.extern.slf4j.Slf4j;
 
 /**

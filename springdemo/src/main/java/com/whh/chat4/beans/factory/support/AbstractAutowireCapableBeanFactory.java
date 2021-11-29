@@ -1,20 +1,27 @@
 package com.whh.chat4.beans.factory.support;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.whh.chat4.beans.PropertyValue;
+import com.whh.chat4.beans.factory.config.BeanReference;
+import com.whh.chat4.beans.PropertyValues;
 import com.whh.chat4.beans.factory.config.BeanDefinition;
 import com.whh.exception.BeansException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.NoOp;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * @description:
  * @author: Artermus wang on 2021-11-29 16:15
  */
 @Slf4j
-public  abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
+public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
 
     @Override
     protected Object createBean(String name, BeanDefinition beanDefinition) {
@@ -22,10 +29,11 @@ public  abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
         log.info("创建实例");
         try {
             o = beanDefinition.getTargetClass().newInstance();
-            registerSingleton(name,o);
+            applyPropertyValues(o, beanDefinition);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new BeansException(e.getMessage(), e);
         }
+        registerSingleton(name, o);
         return o;
     }
 
@@ -34,15 +42,44 @@ public  abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
         Object bean;
         //动态创建对象
         log.info("动态创建对象");
-        bean = createBeanInstance(beanDefinition,args);
-        registerSingleton(name,bean);
+        bean = createBeanInstance(beanDefinition, args);
+        applyPropertyValues(bean, beanDefinition);
+        registerSingleton(name, bean);
 
         return bean;
 
     }
 
+    private void applyPropertyValues(Object bean, BeanDefinition beanDefinition) {
+
+        PropertyValues propertyValues = beanDefinition.getPropertyValues();
+        List<PropertyValue> propertyValueList = propertyValues.getPropertyValueList();
+        try {
+            propertyValueList.forEach(propertyValue -> {
+                String name = propertyValue.getName();
+                Object value = propertyValue.getValue();
+                if (value instanceof BeanReference) {
+                    value = getBean(((BeanReference) value).getBeanName());
+                }
+//                BeanUtil.setFieldValue(bean, name, value);
+                Class<?> targetClass = beanDefinition.getTargetClass();
+                try {
+                    Field declaredField = targetClass.getDeclaredField(name);
+                    setAccessible(declaredField);
+                    declaredField.set(bean, value);
+                } catch (IllegalAccessException | NoSuchFieldException e) {
+                    throw new BeansException(e.getMessage(), e);
+                }
+            });
+        } catch (BeansException e) {
+            throw new BeansException(e);
+        }
+
+    }
+
     /**
      * 使用了jdk反射,可以使用cglib
+     *
      * @param beanDefinition
      * @param args
      * @return
@@ -75,8 +112,9 @@ public  abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
         }
         return o;
     }
-    private Object cglibCreateBean(BeanDefinition beanDefinition,Constructor constructor,Object[] args){
-        Enhancer enhancer =new Enhancer();
+
+    private Object cglibCreateBean(BeanDefinition beanDefinition, Constructor constructor, Object[] args) {
+        Enhancer enhancer = new Enhancer();
 
         enhancer.setCallback(new NoOp() {
             @Override
@@ -85,6 +123,12 @@ public  abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFa
             }
         });
         enhancer.setSuperclass(beanDefinition.getTargetClass());
-        return enhancer.create(constructor.getParameterTypes(),args);
+        return enhancer.create(constructor.getParameterTypes(), args);
+    }
+    public static <T extends AccessibleObject > T setAccessible(T accessibleObject) {
+        if (null != accessibleObject && false == accessibleObject.isAccessible()) {
+            accessibleObject.setAccessible(true);
+        }
+        return accessibleObject;
     }
 }

@@ -1,6 +1,6 @@
 package com.whh.chat4.beans;
 
-import com.whh.chat3.factory.PropertyValue;
+
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;

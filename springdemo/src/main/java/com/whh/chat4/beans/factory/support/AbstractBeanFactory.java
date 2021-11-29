@@ -16,6 +16,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     public Object getBean(String name) throws BeansException {
         Object singletonBean = getSingletonBean(name);
         if(singletonBean != null) {
+            log.info("查询命中 {}",name);
             return singletonBean;
         }
         log.info("缓存中没有，需要创建bean {}",name);
@@ -36,9 +37,10 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
     public Object getBean(String name, Object... args) throws BeansException {
         Object singletonBean = getSingletonBean(name);
         if(singletonBean != null) {
+            log.info("查询命中 {}",name);
             return singletonBean;
         }
-        log.info("缓存中没有，需要创建bean {}",name);
+        log.info("缓存中没有，需要动态创建bean {}",name);
         return createBean(name,getBeanDefinition(name),args);
     }
 

@@ -1,5 +1,6 @@
 package com.whh.chat4.core.io;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -8,5 +9,5 @@ import java.io.InputStream;
  */
 public interface Resource {
 
-    InputStream getInputStream();
+    InputStream getInputStream() throws IOException;
 }
