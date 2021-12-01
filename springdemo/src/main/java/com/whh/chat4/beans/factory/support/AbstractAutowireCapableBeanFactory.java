@@ -14,7 +14,9 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description:
@@ -23,17 +25,21 @@ import java.util.List;
 @Slf4j
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
 
+    private Map<String,Object> earlySingletonBeanMap = new HashMap<>();
+
     @Override
     protected Object createBean(String name, BeanDefinition beanDefinition) {
         Object o;
         log.info("创建实例");
         try {
             o = beanDefinition.getTargetClass().newInstance();
+//           //前移，简单的解决循环依赖
+            registerSingleton(name, o);
             applyPropertyValues(o, beanDefinition);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new BeansException(e.getMessage(), e);
         }
-        registerSingleton(name, o);
+//        registerSingleton(name, o);
         return o;
     }
 

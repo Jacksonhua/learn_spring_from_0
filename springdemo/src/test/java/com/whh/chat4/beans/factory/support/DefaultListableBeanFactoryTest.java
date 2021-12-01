@@ -7,6 +7,7 @@ import com.whh.chat4.beans.PropertyValue;
 import com.whh.chat4.beans.PropertyValues;
 import com.whh.chat4.beans.factory.config.BeanDefinition;
 import com.whh.chat4.beans.factory.config.BeanReference;
+import com.whh.chat4.beans.factory.xml.XmlBeanDefinitionReader;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -43,8 +44,16 @@ public class DefaultListableBeanFactoryTest {
         UserDao dao = (UserDao) factory.getBean("userDao");
         assertEquals(service.getUserDao(),dao);
         service.queryInfo();
+    }
 
-
-
+    @Test
+    public void test(){
+        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+        reader.loadBeanDefinitions("classpath:spring.xml");
+        UserServiceV1 service = (UserServiceV1) factory.getBean("userService");
+        UserDao dao = (UserDao) factory.getBean("userDao");
+        assertEquals(service.getUserDao(),dao);
+        service.queryInfo();
+        System.out.println("dao = " + dao);
     }
 }
