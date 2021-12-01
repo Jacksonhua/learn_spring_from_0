@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 
 
 public class DefaultListableBeanFactoryTest {
-    DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+    private DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
 
     @Test
     public void Test_propertySetter(){

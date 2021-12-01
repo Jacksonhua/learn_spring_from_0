@@ -27,7 +27,9 @@ public class UserServiceV1 {
 
     public void queryInfo(){
         System.out.println("查询信息, " + this.name+" "+this);
-        System.out.println("userDao = " + userDao.getValue());
+        if (userDao != null) {
+            System.out.println("userDao = " + userDao.getValue());
+        }
     }
 
 

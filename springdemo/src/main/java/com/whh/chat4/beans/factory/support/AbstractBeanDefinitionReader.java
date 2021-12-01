@@ -53,4 +53,15 @@ public abstract class AbstractBeanDefinitionReader implements BeanDefinitionRead
         Resource resource = resourceLoader.getResource(location);
         return loadBeanDefinitions(resource);
     }
+    @Override
+    public int loadBeanDefinitions(String... location) throws BeansException {
+        Assert.notNull(location, "location must not be null");
+        int count = 0;
+        for (String s : location) {
+            Resource resource = resourceLoader.getResource(s);
+            count = loadBeanDefinitions(resource);
+        }
+
+        return count;
+    }
 }

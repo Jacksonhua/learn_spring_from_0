@@ -57,7 +57,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         }
         //先提供一个默认的
 
-        return getInstantiationStrategy().instantiate(beanDefinition, name, constructorToUse, args);
+        return instantiationStrategy.instantiate(beanDefinition, name, constructorToUse, args);
     }
 
     /**

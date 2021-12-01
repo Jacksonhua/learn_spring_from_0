@@ -23,7 +23,7 @@ import java.util.Map;
  * @author: Artermus wang on 2021-11-29 16:15
  */
 @Slf4j
-public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory {
+public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
 
     private Map<String,Object> earlySingletonBeanMap = new HashMap<>();
 

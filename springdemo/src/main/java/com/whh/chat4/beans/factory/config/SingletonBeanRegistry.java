@@ -9,4 +9,6 @@ public interface SingletonBeanRegistry {
     void registerSingleton(String beanName, Object singletonObject);
 
     Object getSingletonBean(String beanName);
+
+//    void preInstantiateSingletons(String beanName);
 }
